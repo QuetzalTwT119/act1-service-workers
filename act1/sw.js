@@ -1,7 +1,8 @@
-const CACHE_NAME = 'v2';
+const CACHE_NAME = 'v3';
 const ASSETS = ['./', './script.js', './obj.png'];
 
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(ASSETS))
