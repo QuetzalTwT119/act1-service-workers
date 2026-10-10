@@ -1,5 +1,5 @@
-const CACHE_NAME = 'v1';
-const ASSETS = ['./', './styles.css', './script.js', './obj.png'];
+const CACHE_NAME = 'v2';
+const ASSETS = ['./', './script.js', './obj.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
