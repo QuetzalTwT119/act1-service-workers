@@ -1,30 +1,32 @@
-const CACHE_NAME = 'v4';
-const ASSETS = ['./', './script.js', './obj.png'];
-
 self.addEventListener('install', event => {
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(ASSETS))
-      .then(() => console.log('Assets cached.'))
-      .catch(err => console.log('Could not cache.', err))
-  );
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-    ))
-  );
+    self.skipWaiting();
+    event.waitUntil(
+        caches.open('v1')
+            .then(cache => {
+                cache.addAll([
+                    './', // the index.html
+                    './script.js', // the main script
+                    './obj.png' // local img; same dir as script.js
+                ]);
+                console.log("Assets cached.");
+            })
+            .catch(err => console.log("Could not cache."))
+    )
 });
 
 self.addEventListener('fetch', event => {
-  console.log('Intercepted:', event.request.url);
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      console.log('Response:', response);
-      return response || fetch(event.request);
-    })
-  );
+    console.log("INTERCEPTED");
+
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                console.log("V1 The request: ", event.request);
+                console.log("V1 Got the response...", response);
+                return response || fetch(event.request);
+            })
+            .catch(err => {
+                console.log("Could not find matching request.");
+                return null;
+            })
+    );
 });
